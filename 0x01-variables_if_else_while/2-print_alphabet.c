@@ -1,16 +1,15 @@
 #include <stdio.h>
-#include <conio.h>
 /**
  * main - lowercase alphabet
  * Return: 0
  */
 int main(void)
 {
-	char lc;
+	char l;
 
-	for (lc = 'a'; lc <= 'z'; lc++)
+	for (l = 'a'; l <= 'z'; l++)
 	{
-		putchar(lc);
+		putchar(l);
 	}
 	putchar('\n');
 	return (0);
