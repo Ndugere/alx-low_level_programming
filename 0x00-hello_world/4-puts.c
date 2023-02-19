@@ -2,10 +2,9 @@
 /**
  * main- Program rahisi
  * Return:0
- * inaffa kureturn zero
  */
 int main(void)
 {
-	puts("\"Programming is like building a multilingual puzzle"\n);
+	puts("\"Programming is like building a multilingual puzzle");
 	return (0);
 }
