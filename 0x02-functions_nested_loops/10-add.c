@@ -2,7 +2,8 @@
 /**
  * add - simeple addition
  * Return: addition results
- * int: is what will be added
+ *@a: is what will be added
+ *@b: is what will be added
  */
 int add(int a, int b)
 {
