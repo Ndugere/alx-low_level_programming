@@ -16,6 +16,10 @@ int main(void)
 	for (n = 0; n <= 50; n++)
 	{
 		sum = x + y;
+		if (sum < 1)
+		{
+			sum = sum * -1;
+		}
 		printf("%d, ", sum);
 		x = y;
 		y = sum;
