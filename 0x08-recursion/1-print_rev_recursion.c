@@ -1,14 +1,15 @@
 #include "main.h"
 
 /**
- * _strlen_recursion - note: no _putchar in local test
+ * _print_rev_recursion - Entry point
  * @s: input
  * Return: Always 0 (Success)
  */
-int _strlen_recursion(char *s)
+void _print_rev_recursion(char *s)
 {
-	if (*s == '\0')
-		return (0);
+	if (*s != '\0')
+		_print_rev_recursion(s + 1);
 	else
-		return (1 + _strlen_recursion(s + 1));
+		return;
+	_putchar(*s);
 }
