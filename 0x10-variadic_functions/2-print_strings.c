@@ -3,49 +3,33 @@
 #include <stdio.h>
 
 /**
- * print_all - Variadic function that can print any argument passed in
- * as long as it is a character, integer, float, or string
- * @format: The data type being passed into the function
+ * print_strings - Variadic function that prints strings from arguments
+ * that are passed into this function
+ * @separator: What separates the arguments being passed in
+ * @n: Number of arguments being passed in
  * Return: Nothing
  */
-void print_all(const char * const format, ...)
+void print_strings(const char *separator, const unsigned int n, ...)
 {
-	int i = 0;
+	unsigned int i;
+	char *str = NULL;
 	va_list argument_input;
-	char *str = "(nil)";
-	char *sarray = NULL;
-	char *separator = ", ";
 
-	va_start(argument_input, format);
+	va_start(argument_input, n);
 
-	while (format[i] != '\0' && format != NULL)
+	for (i = 0; i < n; i++)
 	{
-		switch (format[i])
-		{
-			case 'c':
-				printf("%c", va_arg(argument_input, int));
-				break;
-			case 'i':
-				printf("%d", va_arg(argument_input, int));
-				break;
-			case 'f':
-				printf("%f", va_arg(argument_input, double));
-				break;
-			case 's':
-				sarray = va_arg(argument_input, char *);
-				if (sarray == NULL)
-					sarray = str;
-				printf("%s", sarray);
-				break;
-			default:
-				i++;
-				continue;
-		}
-		if ((format[i + 1] != '\0') && (format[i] == 'c' || format[i] == 'i' ||
-					format[i] == 'f' || format[i] == 's'))
-			printf("%s", separator);
-		i++;
+		str = va_arg(argument_input, char *);
+
+		if (str == NULL)
+			printf("(nil)");
+		else
+			printf("%s", str);
+
+	if ((i != n - 1) && separator != NULL)
+		printf("%s", separator);
 	}
+
 	printf("\n");
 	va_end(argument_input);
 }
