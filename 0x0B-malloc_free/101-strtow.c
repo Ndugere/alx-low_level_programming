@@ -9,7 +9,7 @@
  * Special thanks to Ben Keener, Cynthia Taylor, Ariana Bibiano, Kristen Loyd, and Brent Muha.
  */
 
-#include "holberton.h"
+#include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
 
