@@ -1,4 +1,4 @@
-#include "holberton.h"
+#include "main.h"
 /**
  * clear_bit - mwanzoEntry Point
  * @n: input/ kuweka
