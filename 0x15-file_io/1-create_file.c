@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 /**
- *
+ *create_file - creates a file yakuweka text
  * @filename: jina
  * @text_content: kitu ya kuweka
  *
