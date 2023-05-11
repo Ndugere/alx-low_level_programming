@@ -1,17 +1,17 @@
-define _GNU_SOURCE
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
+
+#define BUFFER_SIZE 1024
+
 /**
- * close_errchk - inafunga a file descriptor and kisha ina prints
- * an error message if it fails
- *
+ * close_errchk - closes a file descriptor and prints an error message if it fails
  * @fd: file descriptor to close
  *
- * Return: 0 ikienda poa, -1 kikiumana
+ * Return: 0 if successful, 100 if failed
  */
 int close_errchk(int fd)
 {
@@ -20,95 +20,103 @@ int close_errchk(int fd)
 	err = close(fd);
 	if (err == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kufunga fd %d\n", fd);
 		return (100);
 	}
 	return (0);
 }
 
 /**
- * write_err - kama ni error hii ndio itasoma
- *
- * @fd1: first descriptor
- * @fd2: second descriptor ya pili
- * @filename: filename prompting i
+ * write_err - handles write errors and prints an error message
+ * @fd1: first file descriptor
+ * @fd2: second file descriptor
+ * @filename: name of the file being written to
  *
  * Return: 99
  */
 int write_err(int fd1, int fd2, char *filename)
 {
-	dprintf(STDERR_FILENO, "Error: Can't write to %s\n", filename);
+	dprintf(STDERR_FILENO, "Kosa: Haiwezekani kuandika kwenye %s\n", filename);
 	close_errchk(fd1);
 	close_errchk(fd2);
 	return (99);
 }
 
 /**
- * read_err - hii inasoma error handlers
- *
- * @fd1: inaanza na description hii
- * @fd2: second descriptor to close
- * @filename: kujribu kutoa  error
+ * read_err - handles read errors and prints an error message
+ * @fd1: first file descriptor
+ * @fd2: second file descriptor
+ * @filename: name of the file being read from
  *
  * Return: 98
  */
 int read_err(int fd1, int fd2, char *filename)
 {
-	dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", filename);
+	dprintf(STDERR_FILENO, "Kosa: Haiwezekani kusoma kutoka kwenye faili %s\n", filename);
 	close_errchk(fd1);
 	close_errchk(fd2);
 	return (98);
 }
 
 /**
- * main - inafanya kucopy file moja inapeeka kwa another
- * usage - unatumia cp
+ * main - copies the content of one file to another file
+ * @argc: number of arguments
+ * @argv: array of arguments
  *
- * @ac: number za  arg
- * @av: hii ni list of args/ ni kama arrays
- *
- * Return: 97 kama ni wrong num of args
- * 98 if file_from does not exist or unreadable
- * 99 if write fails
- * 100 if file close fails
- * 0 kama sio hizo zingine juu
+ * Return: 97 if incorrect number of arguments, 98 if file_from cannot be read,
+ *         99 if file_to cannot be written, 100 if closing a file descriptor fails,
+ *         0 otherwise
  */
-int main(int ac, char *av[])
+int main(int argc, char *argv[])
 {
-	char buf[1024];
-	int lenr, lenw, file_from, file_to, err;
+	char buf[BUFFER_SIZE];
+	ssize_t lenr, lenw;
+	int file_from, file_to, err;
 
-	if (ac != 3)
+	if (argc != 3)
 	{
-		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+		dprintf(STDERR_FILENO, "Matumizi: cp file_from file_to\n");
 		return (97);
 	}
-	file_from = open(av[1], O_RDONLY);
+
+	file_from = open(argv[1], O_RDONLY);
 	if (file_from == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n",
-			av[1]);
+		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kusoma kutoka kwenye faili %s\n", argv[1]);
 		return (98);
 	}
-	file_to = open(av[2], O_WRONLY | O_CREAT | O_TRUNC,
-		       S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
+
+	file_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (file_to == -1)
 	{
-		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", av[2]);
+		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kuandika kwenye %s\n", argv[2]);
 		close_errchk(file_from);
 		return (99);
 	}
+
 	do {
-		lenr = read(file_from, buf, 1024);
+		lenr = read(file_from, buf, BUFFER_SIZE);
 		if (lenr == -1)
-			return (read_err(file_from, file_to, av[1]));
+			return (read_err(file_from, file_to, argv[1]));
 		lenw = write(file_to, buf, lenr);
 		if (lenw == -1 || lenw != lenr)
-			return (write_err(file_from, file_to, av[2]));
-	} while (lenr == 1024);
-	err = close_errchk(file_from);
-	err += close_errchk(file_to);
-	if (err != 0)
+			return (write_err(file_from, file_to, argv[2]));
+	} while (lenr == BUFFER_SIZE);
+
+	err = close(file_from);
+	if (err == -1)
+	{
+		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kufunga fd %d\n", file_from);
 		return (100);
+	}
+
+	err = close(file_to);
+	if (err == -1)
+	{
+		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kufunga fd %d\n", file_to);
+		return (100);
+	}
+
 	return (0);
 }
+
