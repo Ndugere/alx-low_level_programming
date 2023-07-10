@@ -3,15 +3,17 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <elf.h>
+#include <string.h>
 
 void print_error(const char* message) {
     write(STDERR_FILENO, message, strlen(message));
     exit(98);
 }
 
-void print_elf_header(const Elf64_Ehdr* header) {
-    char buffer[64]; // Temporary buffer for formatting
-    int len;
+void print_elf_header(const Elf64_Ehdr* header) 
+{
+	char buffer[64];
+	int len;
 
     len = sprintf(buffer, "Magic:   %02x %02x %02x %02x\n",
                   header->e_ident[EI_MAG0], header->e_ident[EI_MAG1],
@@ -60,12 +62,13 @@ int main(int argc, char* argv[]) {
         print_error("Usage: elf_header elf_filename\n");
     }
 
-    int fd = open(argv[1], O_RDONLY);
+    int fd;
+    fd = open(argv[1], O_RDONLY);
     if (fd == -1) {
         print_error("Error: Failed to open file\n");
     }
-
-    Elf64_Ehdr* header = (Elf64_Ehdr*)malloc(sizeof(Elf64_Ehdr));
+    Elf64_Ehdr* header;
+    header = (Elf64_Ehdr*)malloc(sizeof(Elf64_Ehdr));
     if (header == NULL) {
         print_error("Error: Failed to allocate memory\n");
     }

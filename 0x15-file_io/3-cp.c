@@ -78,18 +78,16 @@ int main(int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Matumizi: cp file_from file_to\n");
 		return (97);
 	}
-
 	file_from = open(argv[1], O_RDONLY);
 	if (file_from == -1)
 	{
-		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kusoma kutoka kwenye faili %s\n", argv[1]);
+		dprintf(STDERR_FILENO, " %s\n", argv[1]);
 		return (98);
 	}
-
 	file_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (file_to == -1)
 	{
-		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kuandika kwenye %s\n", argv[2]);
+		dprintf(STDERR_FILENO, "%s\n", argv[2]);
 		close_errchk(file_from);
 		return (99);
 	}
@@ -106,14 +104,14 @@ int main(int argc, char *argv[])
 	err = close(file_from);
 	if (err == -1)
 	{
-		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kufunga fd %d\n", file_from);
+		dprintf(STDERR_FILENO, "%d\n", file_from);
 		return (100);
 	}
 
 	err = close(file_to);
 	if (err == -1)
 	{
-		dprintf(STDERR_FILENO, "Kosa: Haiwezekani kufunga fd %d\n", file_to);
+		dprintf(STDERR_FILENO, "%d\n", file_to);
 		return (100);
 	}
 
