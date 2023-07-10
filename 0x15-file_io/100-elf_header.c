@@ -57,17 +57,17 @@ void print_elf_header(const Elf64_Ehdr* header)
     write(STDOUT_FILENO, buffer, len);
 }
 
-int main(int argc, char* argv[]) {
-    if (argc != 2) {
+int main(int argc, char* argv[])
+{
+	int fd;
+	Elf64_Ehdr* header;
+	if (argc != 2) {
         print_error("Usage: elf_header elf_filename\n");
     }
-
-    int fd;
-    fd = open(argv[1], O_RDONLY);
+	fd = open(argv[1], O_RDONLY);
     if (fd == -1) {
         print_error("Error: Failed to open file\n");
     }
-    Elf64_Ehdr* header;
     header = (Elf64_Ehdr*)malloc(sizeof(Elf64_Ehdr));
     if (header == NULL) {
         print_error("Error: Failed to allocate memory\n");
