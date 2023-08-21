@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/uio.h>
 
 int _putchar(char c);
 int _islower(int c);
