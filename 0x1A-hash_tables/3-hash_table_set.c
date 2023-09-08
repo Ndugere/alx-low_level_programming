@@ -1,5 +1,5 @@
- * File: 3-hash_table_set.c
- * Auth: Brennan D Baraban
+/*
+ * File: 3-hash_table_set.
 */
 
 #include "hash_tables.h"
